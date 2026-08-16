@@ -345,10 +345,9 @@
     split(document.querySelector('.dev-hero-title'));
   })();
 
-  /* ---------- Mascot imut (hero + CTA, semua halaman) ---------- */
+  /* ---------- Mascot imut (semua halaman; ekstra banyak di root) ---------- */
   (function addMascots() {
-    var mascotHtml =
-      '<div class="mascot" aria-hidden="true">' +
+    var svg =
       '<svg class="mascot-svg" viewBox="0 0 120 120">' +
       '<g class="sparkle s1"><path d="M12 20l1.7 4.3L18 26l-4.3 1.7L12 32l-1.7-4.3L6 26l4.3-1.7z" fill="currentColor"/></g>' +
       '<g class="sparkle s2"><path d="M106 16l1.5 3.7L111 21l-3.5 1.5L106 26l-1.5-3.5L101 21l3.5-1.3z" fill="currentColor"/></g>' +
@@ -361,11 +360,37 @@
       '<ellipse class="mascot-blush" cx="30" cy="63" rx="6.5" ry="3.6" fill="var(--bg)"/>' +
       '<ellipse class="mascot-blush" cx="90" cy="63" rx="6.5" ry="3.6" fill="var(--bg)"/>' +
       '<path d="M53 71q7 7 14 0" stroke="var(--bg)" stroke-width="4" stroke-linecap="round" fill="none"/>' +
-      '</svg></div>';
+      '</svg>';
 
-    document.querySelectorAll('.hero, .page-hero, .cta-card').forEach(function (slot) {
-      slot.insertAdjacentHTML('beforeend', mascotHtml);
-    });
+    function make(opts) {
+      var el = document.createElement('div');
+      el.className = 'mascot';
+      el.setAttribute('aria-hidden', 'true');
+      el.innerHTML = svg;
+      var s = 'width:' + (opts.w || 'clamp(72px, 9vw, 116px)') + ';';
+      if (opts.pos) s += opts.pos + ';';
+      if (opts.delay) s += 'animation-delay:' + opts.delay + ';';
+      el.setAttribute('style', s);
+      return el;
+    }
+    function addTo(selector, opts) {
+      document.querySelectorAll(selector).forEach(function (slot) {
+        slot.appendChild(make(opts || {}));
+      });
+    }
+
+    /* Semua halaman: hero/page-hero + CTA */
+    addTo('.hero, .page-hero', {});
+    addTo('.cta-card', { w: 'clamp(56px, 6vw, 84px)', pos: 'bottom:14px;right:14px' });
+
+    /* Root page (/): tambahan biar rame */
+    if (document.querySelector('.hero')) {
+      addTo('.hero', { w: 'clamp(52px, 5vw, 66px)', pos: 'top:clamp(110px, 15vh, 160px);left:clamp(12px, 3vw, 36px)', delay: '.6s' });
+      addTo('.section-stats', { w: 'clamp(56px, 5.5vw, 76px)', pos: 'bottom:16px;right:clamp(14px, 4vw, 48px)', delay: '1.1s' });
+      addTo('.price-wrap', { w: 'clamp(46px, 5vw, 64px)', pos: 'bottom:-16px;right:-8px', delay: '.3s' });
+      addTo('.testi', { w: 'clamp(46px, 5vw, 64px)', pos: 'bottom:60px;left:clamp(0px, 2vw, 28px)', delay: '.9s' });
+      addTo('.footer', { w: 'clamp(44px, 4vw, 58px)', pos: 'bottom:20px;left:clamp(16px, 4vw, 52px)', delay: '1.5s' });
+    }
   })();
 
   /* ---------- Page transitions (pindah tab / back) ---------- */
