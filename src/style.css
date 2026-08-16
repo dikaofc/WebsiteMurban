@@ -1011,6 +1011,7 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
 .testi-card {
   flex: 0 0 100%;
   scroll-snap-align: start;
+  perspective: 1200px;
 }
 .testi-card blockquote {
   background: var(--surface);
@@ -1018,6 +1019,18 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   border-radius: var(--r-md);
   padding: 32px;
   height: 100%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+/* Hover: kartu 3D berputar tanpa henti */
+.testi-card:hover blockquote {
+  animation: spinY 1.4s linear infinite;
+  border-color: var(--ink);
+  box-shadow: var(--shadow-3);
+}
+@keyframes spinY {
+  from { transform: rotateY(0deg) scale(1.02); }
+  to { transform: rotateY(360deg) scale(1.02); }
 }
 .testi-stars {
   display: flex;
@@ -1043,15 +1056,19 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: var(--surface-2);
   border: 1px solid var(--ink);
-  color: var(--ink);
-  font-weight: 700;
-  font-size: 16px;
   flex: none;
+  overflow: hidden;
+}
+.testi-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 .testi-meta { display: grid; }
 .testi-meta strong { font-size: 15px; font-weight: 600; }
