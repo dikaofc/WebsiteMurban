@@ -22,7 +22,9 @@ mendukung **dark/light mode**, dan siap deploy ke **Vercel**.
 - **FAQ** — accordion 7 pertanyaan
 - **CTA + Footer** — band hitam + 4 kolom + sosmed
 - **Halaman `/developer`** — profil developer (DikaCode) + tim + poster jasa
-- **Dark/Light mode** — toggle, tersimpan di `localStorage`, mengikuti OS
+- **Dark/Light mode** — toggle beranimasi spin, tersimpan di `localStorage`, mengikuti OS
+- **Animasi lengkap** — transisi antar halaman (masuk/keluar/back), reveal 3D mengikuti arah scroll, tilt 3D pada kartu, progress bar scroll, menu mobile slide + hamburger→X, FAQ open/close, pop-in tombol
+- **Scrollbar browser disembunyikan** (custom scroll experience)
 - **Header hide-on-scroll** — muncul lagi saat scroll ke atas
 - **Reveal on scroll**, back-to-top, FAB chat Telegram, aksesibilitas (skip-link, aria, focus-visible)
 
@@ -47,7 +49,7 @@ plugin Vite, di produksi lewat rewrite `vercel.json`.
 - **Vite** 6 — build tool & dev server (HMR)
 - **HTML5** semantik + **CSS3** (custom properties, grid, flexbox)
 - **Vanilla JS** (ES module, tanpa dependency runtime)
-- **Font**: system stack (`Segoe UI` → SF Pro, Roboto) + **Georgia serif** untuk headline — nol request font eksternal
+- **Font**: font `.ttf` lokal dari `public/fonts/` — headline **SF UI Text**, body **Roboto Bold**, aksen **SF Pro Text Heavy** (nol request font eksternal)
 - **Ikon**: SVG stroke inline (`currentColor`)
 
 ## 🎨 Design System
@@ -107,10 +109,12 @@ vercel --prod     # production deploy
 ├── src/
 │   ├── style.css       # Design system editorial monochrome (light + dark)
 │   ├── developer.css   # Style khusus halaman /developer
-│   └── main.js         # Theme, menu, hide-on-scroll, reveal, stats,
+│   └── main.js         # Theme, menu, transisi halaman, hide-on-scroll,
+│                       #   reveal 3D, tilt 3D, progress bar, stats,
 │                       #   copy harga, carousel testimoni
 ├── public/
-│   └── assets/         # favicon.svg + og-image.png + preview-grup.png
+│   ├── assets/         # favicon.svg + og-image.png + preview-grup.png
+│   └── fonts/          # font .ttf lokal (SF UI Text, Roboto, SF Pro Text)
 ├── vercel.json         # Deploy config (vite, output dist, rewrites /path)
 ├── vite.config.js      # Multi-page input + clean URL di dev
 └── package.json        # Scripts: dev / build / preview

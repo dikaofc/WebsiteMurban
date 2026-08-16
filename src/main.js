@@ -5,6 +5,7 @@
   'use strict';
 
   const root = document.documentElement;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------- Theme (light default, dark/light toggle) ---------- */
   const themeBtn = document.getElementById('themeToggle');
@@ -27,6 +28,10 @@
   if (themeBtn) {
     themeBtn.addEventListener('click', function () {
       applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+      themeBtn.classList.remove('spin');
+      void themeBtn.offsetWidth; /* restart animasi */
+      themeBtn.classList.add('spin');
+      setTimeout(function () { themeBtn.classList.remove('spin'); }, 500);
     });
   }
 
@@ -47,8 +52,11 @@
     if (!mobileMenu) return;
     mobileMenu.classList.toggle('open', open);
     mobileMenu.setAttribute('aria-hidden', String(!open));
-    if (menuToggle) menuToggle.setAttribute('aria-expanded', String(open));
-    if (menuToggle) menuToggle.setAttribute('aria-label', open ? 'Tutup menu' : 'Buka menu');
+    if (menuToggle) {
+      menuToggle.classList.toggle('open', open);
+      menuToggle.setAttribute('aria-expanded', String(open));
+      menuToggle.setAttribute('aria-label', open ? 'Tutup menu' : 'Buka menu');
+    }
   }
 
   if (menuToggle && mobileMenu) {
@@ -69,6 +77,26 @@
   const fab = document.querySelector('.fab');
   let lastY = 0;
 
+  /* Scroll progress bar (dibuat via JS, tanpa ubah HTML) */
+  const progressBar = document.createElement('div');
+  progressBar.className = 'scroll-progress';
+  progressBar.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(progressBar);
+
+  /* 3D tilt pada elemen .tilt-3d mengikuti posisi scroll */
+  const tiltEls = document.querySelectorAll('.tilt-3d');
+
+  function tilt3d() {
+    if (reduceMotion || !tiltEls.length) return;
+    const vh = window.innerHeight;
+    tiltEls.forEach(function (el) {
+      const r = el.getBoundingClientRect();
+      const center = r.top + r.height / 2 - vh / 2;
+      const p = Math.max(-1, Math.min(1, center / (vh / 2)));
+      el.style.transform = 'perspective(1000px) rotateX(' + (p * -12).toFixed(2) + 'deg) translateY(' + (p * 28).toFixed(1) + 'px)';
+    });
+  }
+
   function onScroll() {
     const y = window.scrollY;
     if (nav) nav.classList.toggle('scrolled', y > 8);
@@ -77,7 +105,16 @@
     /* hide header saat scroll ke bawah, muncul lagi saat scroll ke atas */
     const menuOpen = mobileMenu && mobileMenu.classList.contains('open');
     if (nav) nav.classList.toggle('is-hidden', y > lastY && y > 200 && !menuOpen);
+
+    /* arah scroll untuk reveal 3D */
+    root.dataset.scrollDir = y > lastY ? 'down' : 'up';
+
+    /* progress bar */
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = (max > 0 ? (y / max) * 100 : 0) + '%';
+
     lastY = y;
+    tilt3d();
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
@@ -94,6 +131,8 @@
     const io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
+          /* arah masuk mengikuti arah scroll (3D) */
+          entry.target.classList.add(root.dataset.scrollDir === 'up' ? 'reveal-up' : 'reveal-down');
           entry.target.classList.add('in');
           io.unobserve(entry.target);
         }
@@ -131,8 +170,6 @@
     }
     requestAnimationFrame(frame);
   }
-
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (statEls.length && 'IntersectionObserver' in window) {
     const statIO = new IntersectionObserver(function (entries) {
@@ -271,4 +308,22 @@
     buildDots();
     startAuto();
   }
+
+  /* ---------- Page transitions (pindah tab / back) ---------- */
+  (function initPageTransition() {
+    /* animasi masuk: deteksi navigasi back/forward */
+    try {
+      const navType = window.performance && performance.getEntriesByType('navigation')[0];
+      if (navType && navType.type === 'back_forward') document.body.classList.add('from-back');
+    } catch (e) { /* noop */ }
+
+    document.addEventListener('click', function (e) {
+      const a = e.target.closest('a[href^="/"]');
+      if (!a) return;
+      if (a.target === '_blank' || a.hasAttribute('download')) return;
+      e.preventDefault();
+      document.body.classList.add('page-leave');
+      setTimeout(function () { window.location.href = a.href; }, 170);
+    });
+  })();
 })();

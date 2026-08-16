@@ -4,6 +4,29 @@
    Flat, hairline-driven, no colored accents. Light + dark.
    ============================================================ */
 
+/* ---------- Local fonts (/fonts) ---------- */
+@font-face {
+  font-family: "SF UI Text";
+  src: url("/fonts/SF-UI-Text-Bold%281%29.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("/fonts/Roboto-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "SF Pro Text";
+  src: url("/fonts/FontsFree-Net-SFProText-Heavy.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ---------- Design tokens ---------- */
 :root {
   color-scheme: light;
@@ -70,9 +93,9 @@
   --z-fab: 70;
 
   /* Type */
-  --font-display: Georgia, "Times New Roman", "Palatino Linotype", serif;
-  --font: "Segoe UI", -apple-system, BlinkMacSystemFont, "Inter", Roboto,
-          "Helvetica Neue", Arial, sans-serif;
+  --font-display: "SF UI Text", "Segoe UI", -apple-system, sans-serif;
+  --font: "Roboto", "Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  --font-accent: "SF Pro Text", "SF UI Text", "Segoe UI", sans-serif;
 }
 
 [data-theme="dark"] {
@@ -117,7 +140,12 @@ html {
   overflow-x: hidden;
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--nav-h) + 18px);
+  /* Sembunyikan scrollbar bawaan browser */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+html::-webkit-scrollbar { display: none; width: 0; height: 0; }
+body::-webkit-scrollbar { display: none; }
 
 body {
   font-family: var(--font);
@@ -180,6 +208,7 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  font-family: var(--font-accent);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.18em;
@@ -211,6 +240,7 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   gap: 10px;
   padding: 14px 28px;
   border-radius: var(--r-sm);
+  font-family: var(--font-accent);
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -322,6 +352,7 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
 }
 .brand-sub {
   margin-left: 6px;
+  font-family: var(--font-accent);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.14em;
@@ -337,6 +368,7 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
 .nav-links a {
   position: relative;
   padding: 8px 12px;
+  font-family: var(--font-accent);
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -370,8 +402,35 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
 .theme-toggle .icon-moon { display: none; }
 [data-theme="dark"] .theme-toggle .icon-sun { display: none; }
 [data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+.theme-toggle svg { transition: transform 0.45s var(--ease); }
+.theme-toggle.spin { animation: spinIcon 0.45s var(--ease); }
+@keyframes spinIcon {
+  from { transform: rotate(0deg) scale(0.7); }
+  to { transform: rotate(360deg) scale(1); }
+}
 
 .menu-toggle { display: none; }
+
+/* Hamburger → X morph */
+.hamb {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 22px;
+  height: 18px;
+}
+.hamb i {
+  display: block;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform var(--t) var(--ease), opacity var(--t) var(--ease);
+}
+.menu-toggle.open .hamb i:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-toggle.open .hamb i:nth-child(2) { opacity: 0; }
+.menu-toggle.open .hamb i:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 .mobile-menu {
   display: none;
@@ -381,13 +440,21 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   background: var(--nav-bg);
   border-top: 1px solid var(--line);
 }
-.mobile-menu.open { display: flex; }
+.mobile-menu.open {
+  display: flex;
+  animation: menuDrop 0.32s var(--ease);
+  transform-origin: top;
+}
+@keyframes menuDrop {
+  from { opacity: 0; transform: translateY(-12px) scaleY(0.98); }
+}
 .mobile-menu nav {
   display: flex;
   flex-direction: column;
 }
 .mobile-menu nav a {
   padding: 12px 6px;
+  font-family: var(--font-accent);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -580,6 +647,7 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   padding: 5px 12px;
   border: 1px solid var(--ink);
   border-radius: var(--r-pill);
+  font-family: var(--font-accent);
   font-size: 11.5px;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -653,8 +721,9 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   margin-bottom: 10px;
 }
 .stat-label {
-  font-size: 13.5px;
-  letter-spacing: 0.04em;
+  font-family: var(--font-accent);
+  font-size: 13px;
+  letter-spacing: 0.08em;
   color: var(--on-band);
 }
 
@@ -720,6 +789,7 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   padding: 28px;
 }
 .visual-card-label {
+  font-family: var(--font-accent);
   font-size: 11.5px;
   font-weight: 600;
   letter-spacing: 0.16em;
@@ -790,6 +860,7 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
 }
 .price-badge {
   align-self: flex-start;
+  font-family: var(--font-accent);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -868,6 +939,7 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   padding: 10px 16px;
   border: 1px dashed var(--ink-3);
   border-radius: var(--r-sm);
+  font-family: var(--font-accent);
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -878,7 +950,7 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
 }
 .btn-copy svg { width: 15px; height: 15px; }
 .btn-copy:hover { color: var(--ink); border-color: var(--ink); }
-.btn-copy.copied { color: var(--bg); border-color: var(--ink); background: var(--ink); }
+.btn-copy.copied { color: var(--bg); border-color: var(--ink); background: var(--ink); animation: popIn 0.3s var(--ease); }
 
 /* ---------- Steps ---------- */
 .steps {
@@ -1039,6 +1111,11 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   transition: transform var(--t) var(--ease);
 }
 .faq[open] .faq-chev { transform: rotate(180deg); }
+.faq[open] summary { color: var(--ink); }
+.faq[open] > p { animation: faqIn 0.28s var(--ease); }
+@keyframes faqIn {
+  from { opacity: 0; transform: translateY(-6px); }
+}
 .faq > p {
   padding: 0 24px 22px;
   font-size: 14.5px;
@@ -1102,7 +1179,10 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
 }
 .to-top svg { width: 18px; height: 18px; }
 .to-top:hover { background: var(--ink); color: var(--bg); }
-.to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); animation: popIn 0.3s var(--ease); }
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(14px) scale(0.8); }
+}
 
 .fab {
   position: fixed;
@@ -1173,6 +1253,7 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
 }
 .footer-col { display: grid; gap: 10px; align-content: start; }
 .footer-col h4 {
+  font-family: var(--font-accent);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -1200,16 +1281,52 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   letter-spacing: 0.04em;
   color: var(--on-band);
 }
-/* ---------- Reveal on scroll ---------- */
+/* ---------- Reveal on scroll (3D, direction-aware) ---------- */
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s ease-in-out var(--d, 0s),
-              transform 0.6s ease-in-out var(--d, 0s);
+  transform: perspective(900px) translateY(46px) rotateX(14deg);
+  transform-origin: 50% 0;
+  transition: opacity 0.65s ease-in-out var(--d, 0s),
+              transform 0.65s ease-in-out var(--d, 0s);
+  will-change: opacity, transform;
+}
+.reveal.reveal-up {
+  transform: perspective(900px) translateY(-46px) rotateX(-14deg);
 }
 .reveal.in {
   opacity: 1;
   transform: none;
+}
+
+/* Scroll-driven 3D tilt (brand card, phone shot) */
+.tilt-3d {
+  will-change: transform;
+}
+
+/* ---------- Page transitions (tab / back) ---------- */
+body { animation: pageIn 0.4s var(--ease) both; }
+body.from-back { animation-name: pageInBack; }
+body.page-leave { animation: pageOut 0.18s var(--ease) forwards; }
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(16px); }
+}
+@keyframes pageInBack {
+  from { opacity: 0; transform: translateX(28px); }
+}
+@keyframes pageOut {
+  to { opacity: 0; transform: translateY(-16px); }
+}
+
+/* ---------- Scroll progress bar ---------- */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: calc(var(--z-nav) + 1);
+  width: 0%;
+  height: 3px;
+  background: var(--ink);
+  pointer-events: none;
 }
 
 /* ---------- Responsive ---------- */
