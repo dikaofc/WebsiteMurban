@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "rewrites": [
+    { "source": "/fitur", "destination": "/fitur.html" },
+    { "source": "/benefits", "destination": "/benefits.html" },
+    { "source": "/harga", "destination": "/harga.html" },
+    { "source": "/cara", "destination": "/cara.html" },
+    { "source": "/testimoni", "destination": "/testimoni.html" },
+    { "source": "/faq", "destination": "/faq.html" },
+    { "source": "/developer", "destination": "/developer.html" }
+  ]
+}
