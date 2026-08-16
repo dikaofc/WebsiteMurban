@@ -351,10 +351,11 @@
       '<svg class="mascot-svg" viewBox="0 0 120 120">' +
       '<g class="sparkle s1"><path d="M12 20l1.7 4.3L18 26l-4.3 1.7L12 32l-1.7-4.3L6 26l4.3-1.7z" fill="currentColor"/></g>' +
       '<g class="sparkle s2"><path d="M106 16l1.5 3.7L111 21l-3.5 1.5L106 26l-1.5-3.5L101 21l3.5-1.3z" fill="currentColor"/></g>' +
-      '<g class="mascot-arm"><path d="M94 60c10-3 16 2 18 9" stroke="currentColor" stroke-width="9" stroke-linecap="round" fill="none"/></g>' +
       '<path class="mascot-body" d="M60 10C34 10 14 30 14 56c0 30 21 50 46 50s46-20 46-50c0-26-20-46-46-46z" fill="currentColor"/>' +
       '<ellipse cx="44" cy="104" rx="9" ry="5" fill="currentColor"/>' +
       '<ellipse cx="76" cy="104" rx="9" ry="5" fill="currentColor"/>' +
+      '<g class="mascot-arm left"><path d="M40 63c-7-1-13-4-18-9" stroke="currentColor" stroke-width="9" stroke-linecap="round" fill="none"/><circle cx="20" cy="52" r="6" fill="currentColor"/></g>' +
+      '<g class="mascot-arm right"><path d="M80 63c7-1 13-5 17-10" stroke="currentColor" stroke-width="9" stroke-linecap="round" fill="none"/><circle cx="99" cy="50" r="6" fill="currentColor"/></g>' +
       '<path class="mascot-eye e1" d="M40 52q7-9 15 0" stroke-width="4.5" stroke-linecap="round" fill="none"/>' +
       '<path class="mascot-eye e2" d="M65 52q7-9 15 0" stroke-width="4.5" stroke-linecap="round" fill="none"/>' +
       '<ellipse class="mascot-blush" cx="30" cy="63" rx="6.5" ry="3.6"/>' +
@@ -391,6 +392,175 @@
       addTo('.testi', { w: 'clamp(46px, 5vw, 64px)', pos: 'bottom:60px;left:clamp(0px, 2vw, 28px)', delay: '.9s' });
       addTo('.footer', { w: 'clamp(44px, 4vw, 58px)', pos: 'bottom:20px;left:clamp(16px, 4vw, 52px)', delay: '1.5s' });
     }
+  })();
+
+  /* ============================================================
+     Clingy & imut — mascot ngomong, reaktif, hati & confetti,
+     cursor trail hati, bar pelukan sticky, stiker section
+     ============================================================ */
+  (function clingyStuff() {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var finePointer = window.matchMedia('(pointer: fine)').matches;
+
+    /* --- util: spawn elemen sekali pakai --- */
+    function spawn(tag, cls, css, life) {
+      var el = document.createElement(tag);
+      el.className = cls;
+      if (css) el.setAttribute('style', css);
+      document.body.appendChild(el);
+      if (life) setTimeout(function () { el.remove(); }, life);
+      return el;
+    }
+
+    /* --- Hati & confetti: burst di titik (x, y) --- */
+    var BURST_EMOJI = ['💖', '💗', '🩷', '✨', '⭐', '🎉', '💫'];
+    function burstAt(x, y) {
+      if (reduce) return;
+      var n = 10 + Math.floor(Math.random() * 6);
+      for (var i = 0; i < n; i++) {
+        var e = BURST_EMOJI[i % BURST_EMOJI.length];
+        var ang = (Math.PI * 2 * i) / n + Math.random() * 0.6;
+        var dist = 46 + Math.random() * 64;
+        var el = spawn('span', 'burst-piece',
+          'left:' + x + 'px;top:' + y + 'px;font-size:' + (13 + Math.random() * 14) + 'px;' +
+          '--bx:' + Math.round(Math.cos(ang) * dist) + 'px;' +
+          '--by:' + Math.round(Math.sin(ang) * dist) + 'px;' +
+          '--sc:' + (0.7 + Math.random() * 0.8) + ';' +
+          '--rot:' + Math.round((Math.random() - 0.5) * 220) + 'deg;',
+          1000);
+        el.textContent = e;
+      }
+    }
+
+    /* Burst saat tombol CTA / join diklik */
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('.btn, .fab, .price-chat');
+      if (!btn) return;
+      var r = btn.getBoundingClientRect();
+      burstAt(r.left + r.width / 2, r.top + r.height / 2);
+    });
+
+    /* --- Cursor trail hati (desktop, pointer halus) --- */
+    if (finePointer && !reduce) {
+      var trailLock = false;
+      var TRAIL = ['💖', '🤍', '💗'];
+      document.addEventListener('mousemove', function (e) {
+        if (trailLock) return;
+        trailLock = true;
+        requestAnimationFrame(function () {
+          trailLock = false;
+          var el = spawn('span', 'trail-heart',
+            'left:' + (e.clientX - 8) + 'px;top:' + (e.clientY - 8) + 'px;font-size:' + (11 + Math.random() * 8) + 'px;' +
+            '--tx:' + Math.round((Math.random() - 0.5) * 26) + 'px;' +
+            '--ty:' + Math.round((Math.random() - 0.5) * 18) + 'px;' +
+            '--rot:' + Math.round((Math.random() - 0.5) * 120) + 'deg;',
+            900);
+          el.textContent = TRAIL[Math.floor(Math.random() * TRAIL.length)];
+        });
+      });
+    }
+
+    /* --- Mascot ngomong + reaktif --- */
+    var TALK = [
+      'Halo kak! 👋', 'Mau join murban? 🫶', 'Gaskeun deh! 💪',
+      'Aku imut kan? 🥺', 'Murban aja dulu 🤭', 'Tenang, aman kok 😌'
+    ];
+    var mascots = document.querySelectorAll('.mascot');
+    mascots.forEach(function (m, idx) {
+      /* bubble */
+      var bubble = document.createElement('span');
+      bubble.className = 'mascot-bubble';
+      bubble.setAttribute('aria-hidden', 'true');
+      m.appendChild(bubble);
+      var bubbleTimer = null;
+
+      function say(text, dur) {
+        bubble.textContent = text;
+        bubble.classList.add('show');
+        if (bubbleTimer) clearTimeout(bubbleTimer);
+        bubbleTimer = setTimeout(function () {
+          bubble.classList.remove('show');
+        }, dur || 2800);
+      }
+
+      /* ngomong sendiri bergantian (delay per mascot) */
+      if (!reduce) {
+        var cycle = setInterval(function () {
+          say(TALK[Math.floor(Math.random() * TALK.length)]);
+        }, 5200 + idx * 900);
+        /* stop saat halaman disembunyikan */
+        document.addEventListener('visibilitychange', function () {
+          if (document.hidden && cycle) clearInterval(cycle);
+        });
+      }
+
+      /* reaktif: klik → bounce + burst hati + ngomong */
+      m.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var r = m.getBoundingClientRect();
+        burstAt(r.left + r.width / 2, r.top + r.height / 2);
+        m.classList.remove('react');
+        void m.offsetWidth;
+        m.classList.add('react');
+        setTimeout(function () { m.classList.remove('react'); }, 600);
+        say(TALK[Math.floor(Math.random() * TALK.length)], 3200);
+      });
+    });
+
+    /* --- Bar pelukan sticky (floating pill, kiri-bawah) --- */
+    (function hugBar() {
+      var MSGS = [
+        '🫂 Butuh pelukan?', '💪 Semangat ya kak!', '🍚 Udah makan belum?',
+        '🥺 Jangan lupa istirahat', '✨ Kamu hebat!', '🤗 Gabung yuk, dijamin aman'
+      ];
+      var bar = document.createElement('div');
+      bar.className = 'hug-bar';
+      bar.setAttribute('role', 'status');
+      var emoji = document.createElement('span');
+      emoji.className = 'hug-emoji';
+      emoji.textContent = '🫂';
+      var text = document.createElement('span');
+      text.className = 'hug-text';
+      text.textContent = MSGS[0];
+      var close = document.createElement('button');
+      close.className = 'hug-close';
+      close.type = 'button';
+      close.setAttribute('aria-label', 'Tutup');
+      close.textContent = '✕';
+      bar.appendChild(emoji);
+      bar.appendChild(text);
+      bar.appendChild(close);
+      document.body.appendChild(bar);
+
+      var i = 0;
+      setInterval(function () {
+        i = (i + 1) % MSGS.length;
+        text.textContent = MSGS[i];
+        emoji.textContent = MSGS[i].slice(0, 2);
+        bar.style.animation = 'none';
+        void bar.offsetWidth;
+        bar.style.animation = '';
+      }, 5200);
+      close.addEventListener('click', function () {
+        bar.classList.add('gone');
+        setTimeout(function () { bar.remove(); }, 350);
+      });
+    })();
+
+    /* --- Stiker section imut (di header tiap section) --- */
+    (function sectionStickers() {
+      if (reduce) return;
+      var STICKERS = ['🥺', '🫶', '✨', '💖', '🤭', '😌', '🫂', '💫', '😊', '🥰'];
+      var heads = document.querySelectorAll('.section-head');
+      heads.forEach(function (h, idx) {
+        var s = document.createElement('span');
+        s.className = 'sec-sticker';
+        s.setAttribute('aria-hidden', 'true');
+        s.textContent = STICKERS[idx % STICKERS.length];
+        s.style.animationDelay = (idx % 4) * 0.5 + 's';
+        h.appendChild(s);
+      });
+    })();
   })();
 
   /* ---------- Page transitions (pindah tab / back) ---------- */
