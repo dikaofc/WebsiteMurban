@@ -345,6 +345,29 @@
     split(document.querySelector('.dev-hero-title'));
   })();
 
+  /* ---------- Mascot imut (hero + CTA, semua halaman) ---------- */
+  (function addMascots() {
+    var mascotHtml =
+      '<div class="mascot" aria-hidden="true">' +
+      '<svg class="mascot-svg" viewBox="0 0 120 120">' +
+      '<g class="sparkle s1"><path d="M12 20l1.7 4.3L18 26l-4.3 1.7L12 32l-1.7-4.3L6 26l4.3-1.7z" fill="currentColor"/></g>' +
+      '<g class="sparkle s2"><path d="M106 16l1.5 3.7L111 21l-3.5 1.5L106 26l-1.5-3.5L101 21l3.5-1.3z" fill="currentColor"/></g>' +
+      '<g class="mascot-arm"><path d="M94 60c10-3 16 2 18 9" stroke="currentColor" stroke-width="9" stroke-linecap="round" fill="none"/></g>' +
+      '<path class="mascot-body" d="M60 10C34 10 14 30 14 56c0 30 21 50 46 50s46-20 46-50c0-26-20-46-46-46z" fill="currentColor"/>' +
+      '<ellipse cx="44" cy="104" rx="9" ry="5" fill="currentColor"/>' +
+      '<ellipse cx="76" cy="104" rx="9" ry="5" fill="currentColor"/>' +
+      '<path class="mascot-eye e1" d="M40 52q7-9 15 0" stroke="var(--bg)" stroke-width="4.5" stroke-linecap="round" fill="none"/>' +
+      '<path class="mascot-eye e2" d="M65 52q7-9 15 0" stroke="var(--bg)" stroke-width="4.5" stroke-linecap="round" fill="none"/>' +
+      '<ellipse class="mascot-blush" cx="30" cy="63" rx="6.5" ry="3.6" fill="var(--bg)"/>' +
+      '<ellipse class="mascot-blush" cx="90" cy="63" rx="6.5" ry="3.6" fill="var(--bg)"/>' +
+      '<path d="M53 71q7 7 14 0" stroke="var(--bg)" stroke-width="4" stroke-linecap="round" fill="none"/>' +
+      '</svg></div>';
+
+    document.querySelectorAll('.hero, .page-hero, .cta-card').forEach(function (slot) {
+      slot.insertAdjacentHTML('beforeend', mascotHtml);
+    });
+  })();
+
   /* ---------- Page transitions (pindah tab / back) ---------- */
   (function initPageTransition() {
     /* animasi masuk: deteksi navigasi back/forward */
