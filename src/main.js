@@ -355,11 +355,11 @@
       '<path class="mascot-body" d="M60 10C34 10 14 30 14 56c0 30 21 50 46 50s46-20 46-50c0-26-20-46-46-46z" fill="currentColor"/>' +
       '<ellipse cx="44" cy="104" rx="9" ry="5" fill="currentColor"/>' +
       '<ellipse cx="76" cy="104" rx="9" ry="5" fill="currentColor"/>' +
-      '<path class="mascot-eye e1" d="M40 52q7-9 15 0" stroke="var(--bg)" stroke-width="4.5" stroke-linecap="round" fill="none"/>' +
-      '<path class="mascot-eye e2" d="M65 52q7-9 15 0" stroke="var(--bg)" stroke-width="4.5" stroke-linecap="round" fill="none"/>' +
-      '<ellipse class="mascot-blush" cx="30" cy="63" rx="6.5" ry="3.6" fill="var(--bg)"/>' +
-      '<ellipse class="mascot-blush" cx="90" cy="63" rx="6.5" ry="3.6" fill="var(--bg)"/>' +
-      '<path d="M53 71q7 7 14 0" stroke="var(--bg)" stroke-width="4" stroke-linecap="round" fill="none"/>' +
+      '<path class="mascot-eye e1" d="M40 52q7-9 15 0" stroke-width="4.5" stroke-linecap="round" fill="none"/>' +
+      '<path class="mascot-eye e2" d="M65 52q7-9 15 0" stroke-width="4.5" stroke-linecap="round" fill="none"/>' +
+      '<ellipse class="mascot-blush" cx="30" cy="63" rx="6.5" ry="3.6"/>' +
+      '<ellipse class="mascot-blush" cx="90" cy="63" rx="6.5" ry="3.6"/>' +
+      '<path class="mascot-smile" d="M53 71q7 7 14 0" stroke-width="4" stroke-linecap="round" fill="none"/>' +
       '</svg>';
 
     function make(opts) {

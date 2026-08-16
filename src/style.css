@@ -1494,7 +1494,17 @@ body.page-leave { animation: pageOut 0.18s var(--ease) forwards; }
   pointer-events: none;
   animation: mascotBob 3.4s ease-in-out infinite;
   transform-box: fill-box;
+  /* warna wajah = kontras dgn badan (currentColor), default var(--bg) */
+  --mascot-face: var(--bg);
 }
+/* Wajah mascot: mata & senyum pakai stroke, pipi pakai fill */
+.mascot-eye { stroke: var(--mascot-face); }
+.mascot-smile { stroke: var(--mascot-face); }
+.mascot-blush { fill: var(--mascot-face); }
+/* Permukaan terbalik: badan terang → wajah pakai warna permukaan itu */
+.cta-card .mascot { --mascot-face: var(--cta-bg); }
+.section-stats .mascot,
+.footer .mascot { --mascot-face: var(--band-bg); }
 .hero .mascot,
 .page-hero .mascot {
   bottom: clamp(10px, 3vh, 26px);
