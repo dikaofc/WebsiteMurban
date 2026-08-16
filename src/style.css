@@ -1301,6 +1301,23 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
 /* Scroll-driven 3D tilt (brand card, phone shot) */
 .tilt-3d {
   will-change: transform;
+  transform-style: preserve-3d;
+}
+
+/* Hero title — kata per kata masuk 3D */
+.hw {
+  display: inline-block;
+  opacity: 0;
+  transform: perspective(600px) rotateX(85deg) translateY(22px);
+  transform-origin: 50% 100%;
+  animation: wordIn 0.6s var(--ease) forwards;
+  will-change: transform, opacity;
+}
+@keyframes wordIn {
+  to {
+    opacity: 1;
+    transform: perspective(600px) rotateX(0deg) translateY(0);
+  }
 }
 
 /* ---------- Page transitions (tab / back) ---------- */
