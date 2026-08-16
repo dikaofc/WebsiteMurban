@@ -63,17 +63,17 @@
   --line: #E4E4E0;
   --line-strong: #0A0A0A;
 
-  /* Radius — mostly flat */
-  --r-sm: 2px;
-  --r-md: 3px;
-  --r-lg: 6px;
-  --r-xl: 12px;
+  /* Radius — bento / Apple style */
+  --r-sm: 6px;
+  --r-md: 16px;
+  --r-lg: 20px;
+  --r-xl: 28px;
   --r-pill: 999px;
 
-  /* Shadows — editorial flat; kept only for floating controls */
-  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.06), 0 8px 20px rgba(0, 0, 0, 0.08);
-  --shadow-3: 0 2px 4px rgba(0, 0, 0, 0.06), 0 16px 32px rgba(0, 0, 0, 0.10);
+  /* Shadows — soft, layered, floating (neumorphic-ish) */
+  --shadow-1: 0 1px 2px rgba(10, 10, 10, 0.05), 0 6px 16px rgba(10, 10, 10, 0.06);
+  --shadow-2: 0 2px 6px rgba(10, 10, 10, 0.06), 0 22px 44px rgba(10, 10, 10, 0.12);
+  --shadow-3: 0 4px 12px rgba(10, 10, 10, 0.08), 0 32px 64px rgba(10, 10, 10, 0.16);
 
   /* Motion */
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
@@ -126,9 +126,9 @@
   --line: rgba(255, 255, 255, 0.16);
   --line-strong: #FFFFFF;
 
-  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.5);
-  --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.5), 0 8px 20px rgba(0, 0, 0, 0.6);
-  --shadow-3: 0 2px 4px rgba(0, 0, 0, 0.5), 0 16px 32px rgba(0, 0, 0, 0.7);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.45), 0 6px 16px rgba(0, 0, 0, 0.5);
+  --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.45), 0 22px 44px rgba(0, 0, 0, 0.6);
+  --shadow-3: 0 4px 12px rgba(0, 0, 0, 0.5), 0 32px 64px rgba(0, 0, 0, 0.7);
 }
 
 /* ---------- Reset & base ---------- */
@@ -310,12 +310,15 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   position: fixed;
   inset: 0 0 auto;
   z-index: var(--z-nav);
-  background: var(--nav-bg);
+  background: color-mix(in srgb, var(--nav-bg) 78%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  backdrop-filter: blur(14px) saturate(1.4);
   color: var(--nav-fg);
   border-bottom: 1px solid var(--line);
   transform: translateY(0);
-  transition: transform var(--t-slow) var(--ease);
+  transition: transform var(--t-slow) var(--ease), background var(--t) var(--ease);
 }
+.nav.scrolled { background: color-mix(in srgb, var(--nav-bg) 92%, transparent); }
 .nav.scrolled { border-bottom-color: var(--line-strong); }
 .nav.is-hidden { transform: translateY(-100%); }
 
@@ -437,7 +440,9 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   flex-direction: column;
   gap: 4px;
   padding: 12px var(--container-pad) 22px;
-  background: var(--nav-bg);
+  background: color-mix(in srgb, var(--nav-bg) 90%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
   border-top: 1px solid var(--line);
 }
 .mobile-menu.open {
@@ -665,11 +670,17 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   border: 1px solid var(--line);
   border-radius: var(--r-md);
   padding: 26px;
-  transition: border-color var(--t) var(--ease), transform var(--t) var(--ease);
+  box-shadow: var(--shadow-1);
+  transform-style: preserve-3d;
+  transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease),
+              transform var(--t) var(--ease);
+  will-change: transform;
 }
+/* Hover: floating + 3D perspective (depth) + shadow membesar */
 .card:hover {
   border-color: var(--ink);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-2);
+  transform: perspective(900px) translateY(-10px) rotateX(5deg) rotateY(-3deg);
 }
 
 /* ---------- Features ---------- */
@@ -785,8 +796,9 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   max-width: 440px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
   padding: 28px;
+  box-shadow: var(--shadow-1);
 }
 .visual-card-label {
   font-family: var(--font-accent);
@@ -965,9 +977,17 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   border: 1px solid var(--line);
   border-radius: var(--r-md);
   padding: 30px;
-  transition: border-color var(--t) var(--ease), transform var(--t) var(--ease);
+  box-shadow: var(--shadow-1);
+  transform-style: preserve-3d;
+  transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease),
+              transform var(--t) var(--ease);
+  will-change: transform;
 }
-.step:hover { border-color: var(--ink); transform: translateY(-2px); }
+.step:hover {
+  border-color: var(--ink);
+  box-shadow: var(--shadow-2);
+  transform: perspective(900px) translateY(-10px) rotateX(5deg) rotateY(3deg);
+}
 .step-num {
   display: inline-flex;
   align-items: center;
@@ -1016,9 +1036,10 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
 .testi-card blockquote {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
   padding: 32px;
   height: 100%;
+  box-shadow: var(--shadow-1);
   transform-style: preserve-3d;
   will-change: transform;
 }
@@ -1103,8 +1124,10 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
-  transition: border-color var(--t) var(--ease);
+  box-shadow: var(--shadow-1);
+  transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease);
 }
+.faq:hover { box-shadow: var(--shadow-2); }
 .faq:hover { border-color: var(--ink-2); }
 .faq[open] { border-color: var(--ink); }
 .faq summary {
@@ -1154,6 +1177,7 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   background: var(--cta-bg);
   color: var(--cta-fg);
   border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow-2);
 }
 .cta-title {
   font-family: var(--font-display);

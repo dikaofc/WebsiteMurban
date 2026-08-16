@@ -83,19 +83,8 @@
   progressBar.setAttribute('aria-hidden', 'true');
   document.body.appendChild(progressBar);
 
-  /* 3D tilt: gabungan scroll + cursor untuk .tilt-3d, dan hover cursor utk kartu */
+  /* 3D tilt scroll (kartu membership, foto grup) — bukan ikut mouse */
   const tiltEls = document.querySelectorAll('.tilt-3d');
-  const tiltables = '.card, .step, .tilt-3d';
-  let hoverEl = null;
-
-  function tiltTransform(el) {
-    const sp = parseFloat(el.dataset.sp || '0');
-    const mx = parseFloat(el.dataset.mx || '0');
-    const my = parseFloat(el.dataset.my || '0');
-    const rx = sp * -12 + my * -10;
-    const ry = mx * 12;
-    el.style.transform = 'perspective(1000px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg) translateY(' + (sp * 28).toFixed(1) + 'px)';
-  }
 
   function tilt3d() {
     if (reduceMotion || !tiltEls.length) return;
@@ -103,32 +92,8 @@
     tiltEls.forEach(function (el) {
       const r = el.getBoundingClientRect();
       const center = r.top + r.height / 2 - vh / 2;
-      el.dataset.sp = Math.max(-1, Math.min(1, center / (vh / 2))).toFixed(3);
-      tiltTransform(el);
-    });
-  }
-
-  /* tilt 3D interaktif mengikuti cursor */
-  if (!reduceMotion) {
-    document.addEventListener('mousemove', function (e) {
-      const el = e.target.closest(tiltables);
-      if (el !== hoverEl) {
-        if (hoverEl) tiltTransform(hoverEl);
-        hoverEl = el;
-      }
-      if (!el) return;
-      const r = el.getBoundingClientRect();
-      el.dataset.mx = ((e.clientX - r.left) / r.width - 0.5).toFixed(3);
-      el.dataset.my = ((e.clientY - r.top) / r.height - 0.5).toFixed(3);
-      tiltTransform(el);
-    });
-    document.addEventListener('mouseleave', function () {
-      if (hoverEl) {
-        hoverEl.dataset.mx = '0';
-        hoverEl.dataset.my = '0';
-        tiltTransform(hoverEl);
-        hoverEl = null;
-      }
+      const p = Math.max(-1, Math.min(1, center / (vh / 2)));
+      el.style.transform = 'perspective(1000px) rotateX(' + (p * -12).toFixed(2) + 'deg) translateY(' + (p * 28).toFixed(1) + 'px)';
     });
   }
 
