@@ -137,12 +137,18 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  overflow-x: hidden;
+  /* Kunci scroll horizontal — tidak bisa digeser kanan/kiri */
+  overflow-x: clip;
+  overscroll-behavior-x: none;
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--nav-h) + 18px);
   /* Sembunyikan scrollbar bawaan browser */
   scrollbar-width: none;
   -ms-overflow-style: none;
+}
+body {
+  overflow-x: clip;
+  overscroll-behavior-x: none;
 }
 html::-webkit-scrollbar { display: none; width: 0; height: 0; }
 body::-webkit-scrollbar { display: none; }
