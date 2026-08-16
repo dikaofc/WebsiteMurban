@@ -1611,7 +1611,11 @@ body.page-leave { animation: pageOut 0.18s var(--ease) forwards; }
   font-size: 12.5px;
   font-weight: 600;
   letter-spacing: 0.01em;
-  white-space: nowrap;
+  line-height: 1.4;
+  text-align: center;
+  /* responsive: text bisa wrap & tidak melebihi layar */
+  white-space: normal;
+  max-width: min(230px, calc(100vw - 24px));
   box-shadow: var(--shadow-2);
   opacity: 0;
   pointer-events: none;
@@ -1630,6 +1634,13 @@ body.page-leave { animation: pageOut 0.18s var(--ease) forwards; }
 .mascot-bubble.show {
   opacity: 1;
   transform: translateX(-50%) translateY(0) scale(1);
+}
+@media (max-width: 640px) {
+  .mascot-bubble {
+    font-size: 11.5px;
+    max-width: min(190px, calc(100vw - 20px));
+    bottom: calc(100% + 6px);
+  }
 }
 
 /* --- Mascot reaktif (bounce saat diklik) --- */

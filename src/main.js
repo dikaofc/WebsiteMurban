@@ -477,9 +477,17 @@
       function say(text, dur) {
         bubble.textContent = text;
         bubble.classList.add('show');
+        /* jaga bubble tetap di dalam layar (tidak kepotong di pojok) */
+        var pad = 10;
+        var b = bubble.getBoundingClientRect();
+        var m = m.getBoundingClientRect();
+        var cx = m.left + m.width / 2;
+        var left = Math.max(pad, Math.min(cx - b.width / 2, window.innerWidth - b.width - pad));
+        bubble.style.marginLeft = (left - m.left) + 'px';
         if (bubbleTimer) clearTimeout(bubbleTimer);
         bubbleTimer = setTimeout(function () {
           bubble.classList.remove('show');
+          bubble.style.marginLeft = '';
         }, dur || 2800);
       }
 
