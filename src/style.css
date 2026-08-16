@@ -677,16 +677,12 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   border-radius: var(--r-md);
   padding: 26px;
   box-shadow: var(--shadow-1);
-  transform-style: preserve-3d;
-  transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease),
-              transform var(--t) var(--ease);
-  will-change: transform;
+  transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease);
 }
-/* Hover: floating + 3D perspective (depth) + shadow membesar */
+/* Hover: biasa aja — border + shadow */
 .card:hover {
   border-color: var(--ink);
   box-shadow: var(--shadow-2);
-  transform: perspective(900px) translateY(-10px) rotateX(5deg) rotateY(-3deg);
 }
 
 /* ---------- Features ---------- */
@@ -984,15 +980,11 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   border-radius: var(--r-md);
   padding: 30px;
   box-shadow: var(--shadow-1);
-  transform-style: preserve-3d;
-  transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease),
-              transform var(--t) var(--ease);
-  will-change: transform;
+  transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease);
 }
 .step:hover {
   border-color: var(--ink);
   box-shadow: var(--shadow-2);
-  transform: perspective(900px) translateY(-10px) rotateX(5deg) rotateY(3deg);
 }
 .step-num {
   display: inline-flex;
@@ -1049,15 +1041,10 @@ button { font: inherit; cursor: pointer; color: inherit; background: none; borde
   transform-style: preserve-3d;
   will-change: transform;
 }
-/* Hover: kartu 3D berputar tanpa henti */
+/* Hover: biasa aja — border + shadow */
 .testi-card:hover blockquote {
-  animation: spinY 1.4s linear infinite;
   border-color: var(--ink);
-  box-shadow: var(--shadow-3);
-}
-@keyframes spinY {
-  from { transform: rotateY(0deg) scale(1.02); }
-  to { transform: rotateY(360deg) scale(1.02); }
+  box-shadow: var(--shadow-2);
 }
 .testi-stars {
   display: flex;
